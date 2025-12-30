@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG System Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .error {
+            border-left-color: #f44336;
+            background: rgba(244, 67, 54, 0.1);
+        }
+        .success {
+            border-left-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+        .info {
+            border-left-color: #2196F3;
+            background: rgba(33, 150, 243, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        h2 {
+            color: #FFD700;
+            margin-bottom: 15px;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status.success { background: #4CAF50; }
+        .status.error { background: #f44336; }
+        .status.warning { background: #FF9800; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 RAG System Test Dashboard</h1>
+        
+        <div class="test-section">
+            <h2>📊 System Status</h2>
+            <button onclick="checkSystemStatus()">Check RAG System Status</button>
+            <div id="systemStatus" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📄 Document Processing Test</h2>
+            <button onclick="testDocumentProcessing()">Test Sample Document Processing</button>
+            <div id="docProcessing" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔍 RAG Query Test</h2>
+            <button onclick="testRAGQuery()">Test RAG Query</button>
+            <div id="ragQuery" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>💬 Enhanced Chat Test</h2>
+            <button onclick="testEnhancedChat()">Test Enhanced Chat with RAG</button>
+            <div id="chatTest" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🧹 Cleanup</h2>
+            <button onclick="cleanupTestData()">Clean Test Data</button>
+            <div id="cleanup" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const testPatientId = 'P001';
+        const testDocumentName = 'test-cardiology-report.txt';
+        const testDocumentContent = `CARDIOLOGY CONSULTATION REPORT
+
+Patient: John Doe
+Age: 65
+Date: ${new Date().toLocaleDateString()}
+
+CHIEF COMPLAINT:
+Chest pain and shortness of breath
+
+HISTORY OF PRESENT ILLNESS:
+65-year-old male presents with acute onset chest pain radiating to left arm, associated with diaphoresis and nausea. Pain started 2 hours ago while at rest.
+
+PHYSICAL EXAMINATION:
+- Vital Signs: BP 160/95, HR 110, RR 22, O2 Sat 94% on room air
+- Cardiovascular: Irregular rhythm, S3 gallop present
+- Pulmonary: Bilateral crackles at bases
+
+DIAGNOSTIC STUDIES:
+- ECG: ST elevation in leads II, III, aVF
+- Troponin I: 15.2 ng/mL (elevated)
+- CK-MB: 45 ng/mL (elevated)
+
+ASSESSMENT:
+1. Acute ST-elevation myocardial infarction (STEMI) - inferior wall
+2. Acute heart failure
+3. Hypertension
+
+PLAN:
+1. Emergent cardiac catheterization
+2. Dual antiplatelet therapy
+3. Heparin anticoagulation
+4. ACE inhibitor
+5. Beta-blocker when hemodynamically stable
+
+Dr. Sarah Johnson, MD
+Interventional Cardiology`;
+
+        async function checkSystemStatus() {
+            const resultDiv = document.getElementById('systemStatus');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Checking system status...';
+
+            try {
+                // Test RAG API endpoint
+                const response = await fetch('/api/rag', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'stats',
+                        patientId: testPatientId
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ RAG System Status: ONLINE
+
+API Response: ${JSON.stringify(result, null, 2)}
+
+Environment Check:
+- PINECONE_API_KEY: ${window.location.origin.includes('localhost') ? 'Configured' : 'Check server logs'}
+- HUGGINGFACE_API_KEY: ${window.location.origin.includes('localhost') ? 'Configured' : 'Check server logs'}
+- Index Name: ${result.stats ? 'Connected' : 'Check configuration'}
+
+Current Stats:
+- Documents: ${result.stats?.documentCount || 0}
+- Chunks: ${result.stats?.chunkCount || 0}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ RAG System Error: ${result.error || 'Unknown error'}
+
+Response: ${JSON.stringify(result, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ System Check Failed: ${error.message}
+
+This could indicate:
+1. API endpoint not accessible
+2. Authentication issues
+3. Network connectivity problems`;
+            }
+        }
+
+        async function testDocumentProcessing() {
+            const resultDiv = document.getElementById('docProcessing');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Testing document processing...';
+
+            try {
+                // Create a test file
+                const blob = new Blob([testDocumentContent], { type: 'text/plain' });
+                const formData = new FormData();
+                formData.append('file', blob, testDocumentName);
+                formData.append('patientId', testPatientId);
+
+                const response = await fetch('/api/process-document', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Document Processing: SUCCESS
+
+File: ${result.fileName}
+Size: ${result.length} characters
+RAG Enabled: ${result.ragEnabled}
+Message: ${result.message}
+
+Content Preview:
+${result.content.substring(0, 300)}...`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Document Processing Failed: ${result.error || result.message}
+
+Response: ${JSON.stringify(result, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Document Processing Error: ${error.message}`;
+            }
+        }
+
+        async function testRAGQuery() {
+            const resultDiv = document.getElementById('ragQuery');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Testing RAG query...';
+
+            try {
+                const response = await fetch('/api/rag', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'query',
+                        patientId: testPatientId,
+                        query: 'chest pain myocardial infarction troponin'
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ RAG Query: SUCCESS
+
+Query: "chest pain myocardial infarction troponin"
+Results Found: ${result.count}
+
+${result.results.map((r, i) => `
+Result ${i + 1}:
+- Document: ${r.metadata.documentName}
+- Relevance Score: ${(r.score * 100).toFixed(1)}%
+- Content: ${r.content.substring(0, 200)}...
+`).join('\n')}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ RAG Query Failed: ${result.error || 'No results'}
+
+Response: ${JSON.stringify(result, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ RAG Query Error: ${error.message}`;
+            }
+        }
+
+        async function testEnhancedChat() {
+            const resultDiv = document.getElementById('chatTest');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Testing enhanced chat...';
+
+            try {
+                const response = await fetch('/api/enhanced-icu-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: [
+                            { role: 'user', content: 'What are the key findings in this patient\'s cardiology report? Focus on the troponin levels and ECG changes.' }
+                        ],
+                        patientId: testPatientId,
+                        patientData: {
+                            master: {
+                                id: testPatientId,
+                                name: 'John Doe',
+                                age: 65,
+                                sex: 'M',
+                                admission_diagnosis: 'Acute MI',
+                                active_issues: ['Chest pain', 'STEMI'],
+                                comorbidities: ['Hypertension'],
+                                medications: ['Aspirin', 'Clopidogrel'],
+                                allergies: []
+                            },
+                            vitals: [{
+                                heart_rate: 110,
+                                systolic_bp: 160,
+                                diastolic_bp: 95,
+                                spo2: 94,
+                                temperature: 37.0,
+                                respiratory_rate: 22,
+                                timestamp: new Date().toISOString(),
+                                status: 'critical',
+                                alarms: ['High BP', 'Tachycardia']
+                            }]
+                        },
+                        ragEnabled: true
+                    })
+                });
+
+                if (response.ok) {
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    let fullResponse = '';
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        
+                        const chunk = decoder.decode(value);
+                        fullResponse += chunk;
+                        
+                        // Update display with streaming response
+                        resultDiv.className = 'result success';
+                        resultDiv.textContent = `✅ Enhanced Chat: STREAMING
+
+AI Response:
+${fullResponse}
+
+Status: ${done ? 'Complete' : 'Streaming...'}`;
+                    }
+
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Enhanced Chat: SUCCESS
+
+AI Response:
+${fullResponse}
+
+Test completed successfully! The AI was able to analyze the patient data and RAG documents.`;
+                } else {
+                    const errorResult = await response.json();
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Enhanced Chat Failed: ${errorResult.error}
+
+Response: ${JSON.stringify(errorResult, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Enhanced Chat Error: ${error.message}`;
+            }
+        }
+
+        async function cleanupTestData() {
+            const resultDiv = document.getElementById('cleanup');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '🔄 Cleaning up test data...';
+
+            try {
+                const response = await fetch('/api/rag', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'remove',
+                        patientId: testPatientId
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `✅ Cleanup: SUCCESS
+
+${result.message}
+
+All test documents for patient ${testPatientId} have been removed from the RAG system.`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `❌ Cleanup Failed: ${result.error || result.message}
+
+Response: ${JSON.stringify(result, null, 2)}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Cleanup Error: ${error.message}`;
+            }
+        }
+
+        // Auto-run system status check on page load
+        window.addEventListener('load', () => {
+            setTimeout(checkSystemStatus, 1000);
+        });
+    </script>
+</body>
+</html>

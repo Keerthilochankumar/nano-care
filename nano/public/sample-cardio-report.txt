@@ -1,0 +1,66 @@
+OMC CARDIOLOGY REPORT
+
+PATIENT: Jane Smith
+DOB: 1979-12-15
+MRN: P002
+DATE: December 28, 2025
+
+CLINICAL INDICATION:
+Acute chest pain with dyspnea, rule out myocardial infarction
+
+ELECTROCARDIOGRAM FINDINGS:
+- Sinus tachycardia at 104 bpm
+- ST-segment depression in leads V4-V6 (2mm)
+- T-wave inversions in leads II, III, aVF
+- No evidence of acute ST-elevation MI
+- Prolonged QTc interval (460ms)
+
+ECHOCARDIOGRAM RESULTS:
+- Left ventricular ejection fraction: 45% (mildly reduced)
+- Regional wall motion abnormalities in inferior wall
+- Mild mitral regurgitation
+- Normal right heart function
+- No pericardial effusion
+
+CARDIAC BIOMARKERS:
+- Troponin I: 2.4 ng/mL (elevated, normal <0.04)
+- CK-MB: 15.2 ng/mL (elevated, normal <6.3)
+- BNP: 450 pg/mL (elevated, normal <100)
+
+CHEST X-RAY:
+- Mild pulmonary edema
+- Cardiomegaly present
+- No pneumothorax or pleural effusion
+
+ASSESSMENT:
+1. Non-ST elevation myocardial infarction (NSTEMI)
+2. Acute coronary syndrome
+3. Mild heart failure with reduced ejection fraction
+4. Sinus tachycardia, likely compensatory
+
+RECOMMENDATIONS:
+1. Immediate cardiology consultation
+2. Dual antiplatelet therapy (aspirin + clopidogrel)
+3. Anticoagulation with heparin
+4. Beta-blocker therapy (metoprolol)
+5. ACE inhibitor for heart failure
+6. Statin therapy for cholesterol management
+7. Consider cardiac catheterization within 24 hours
+8. Continuous cardiac monitoring
+9. Serial troponin levels every 6 hours
+10. Echocardiogram follow-up in 48 hours
+
+RISK STRATIFICATION:
+- TIMI Risk Score: 4 (intermediate risk)
+- GRACE Score: 140 (high risk)
+- Recommend invasive strategy
+
+DISCHARGE PLANNING:
+- Patient requires ICU monitoring
+- Cardiology follow-up in 1 week
+- Cardiac rehabilitation referral
+- Lifestyle modifications counseling
+
+Dr. Sarah Johnson, MD
+Interventional Cardiology
+OMC Heart Center

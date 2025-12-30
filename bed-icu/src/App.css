@@ -1,0 +1,325 @@
+/* Hospital ICU Monitoring System - Clean Medical UI */
+
+/* Smooth transitions for all elements */
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Medical status colors */
+:root {
+  --hospital-green: #16a085;
+  --hospital-blue: #2980b9;
+  --hospital-orange: #e67e22;
+  --hospital-red: #e74c3c;
+  --hospital-gray: #95a5a6;
+  --hospital-dark: #2c3e50;
+  --hospital-light: #ecf0f1;
+  --hospital-bg: #f8f9fa;
+  --hospital-card: #ffffff;
+  --hospital-border: #dee2e6;
+  --hospital-text: #2c3e50;
+  --hospital-text-light: #6c757d;
+}
+
+/* Subtle pulse for active monitoring */
+.pulse-gentle {
+  animation: pulseGentle 3s ease-in-out infinite;
+}
+
+@keyframes pulseGentle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Critical alert - medical standard */
+.alert-critical {
+  animation: alertBlink 1.5s ease-in-out infinite;
+  border-left: 4px solid var(--hospital-red);
+}
+
+@keyframes alertBlink {
+  0%, 100% {
+    background-color: rgba(231, 76, 60, 0.05);
+  }
+  50% {
+    background-color: rgba(231, 76, 60, 0.1);
+  }
+}
+
+/* Subtle heartbeat for heart rate */
+.heartbeat-subtle {
+  animation: heartbeatSubtle 1.2s ease-in-out infinite;
+}
+
+@keyframes heartbeatSubtle {
+  0%, 100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.02);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.02);
+  }
+  60% {
+    transform: scale(1);
+  }
+}
+
+/* Gentle breathing animation */
+.breathing-gentle {
+  animation: breathingGentle 4s ease-in-out infinite;
+}
+
+@keyframes breathingGentle {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.01);
+  }
+}
+
+/* Slide in animations - subtle */
+.slide-in-up {
+  animation: slideInUp 0.4s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Fade in animation */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Hover effects - subtle */
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Status indicator dot */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.stable {
+  background-color: var(--hospital-green);
+  animation: pulseGentle 2s infinite;
+}
+
+.status-dot.critical {
+  background-color: var(--hospital-orange);
+  animation: pulseGentle 1.5s infinite;
+}
+
+.status-dot.emergency {
+  background-color: var(--hospital-red);
+  animation: alertBlink 1s infinite;
+}
+
+.status-dot.recovering {
+  background-color: var(--hospital-blue);
+  animation: pulseGentle 2.5s infinite;
+}
+
+/* Progress bars - medical style */
+.progress-bar {
+  height: 4px;
+  background-color: #e9ecef;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.progress-fill.normal {
+  background-color: var(--hospital-green);
+}
+
+.progress-fill.warning {
+  background-color: var(--hospital-orange);
+}
+
+.progress-fill.critical {
+  background-color: var(--hospital-red);
+}
+
+/* Connection status indicator */
+.connection-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.connection-indicator.connected {
+  background-color: var(--hospital-green);
+  animation: pulseGentle 2s infinite;
+}
+
+.connection-indicator.disconnected {
+  background-color: var(--hospital-gray);
+}
+
+.connection-indicator.error {
+  background-color: var(--hospital-red);
+  animation: alertBlink 1s infinite;
+}
+
+/* Medical card styling */
+.medical-card {
+  background: var(--hospital-card);
+  border: 1px solid var(--hospital-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.medical-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Vital signs styling */
+.vital-normal {
+  color: var(--hospital-green);
+  font-weight: 600;
+}
+
+.vital-warning {
+  color: var(--hospital-orange);
+  font-weight: 600;
+}
+
+.vital-critical {
+  color: var(--hospital-red);
+  font-weight: 700;
+}
+
+/* Loading spinner - medical style */
+.medical-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #e9ecef;
+  border-top: 2px solid var(--hospital-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Scrollbar - clean medical style */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f3f4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c8cd;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8b2b9;
+}
+
+/* Custom slider styles */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-track {
+  background: #e5e7eb;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.slider.accent-green-500::-webkit-slider-thumb {
+  background: #10b981;
+}
+
+.slider.accent-orange-500::-webkit-slider-thumb {
+  background: #f97316;
+}
+
+.slider.accent-red-500::-webkit-slider-thumb {
+  background: #ef4444;
+}
+
+/* Firefox slider styles */
+.slider::-moz-range-track {
+  background: #e5e7eb;
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+.slider::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #3b82f6;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  border: none;
+}

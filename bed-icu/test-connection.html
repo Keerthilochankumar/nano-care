@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICU Monitor Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1a1a1a; color: white; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .test-section { background: #2a2a2a; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #22c55e; color: white; }
+        .error { background: #ef4444; color: white; }
+        .info { background: #3b82f6; color: white; }
+        button { background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #2563eb; }
+        #log { background: #000; color: #0f0; padding: 15px; border-radius: 4px; height: 300px; overflow-y: auto; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 ICU Monitor Connection Test</h1>
+        
+        <div class="test-section">
+            <h2>📡 Connection Information</h2>
+            <div class="info">
+                <strong>HTTP API:</strong> http://localhost:3002/api/beds<br>
+                <strong>WebSocket:</strong> ws://localhost:3002<br>
+                <strong>Frontend:</strong> http://localhost:5173
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔗 HTTP API Test</h2>
+            <button onclick="testAPI()">Test HTTP API</button>
+            <div id="apiStatus"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔌 WebSocket Test</h2>
+            <button onclick="connectWebSocket()">Connect WebSocket</button>
+            <button onclick="disconnectWebSocket()">Disconnect</button>
+            <div id="wsStatus"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Live Data Log</h2>
+            <button onclick="clearLog()">Clear Log</button>
+            <div id="log"></div>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function setStatus(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        async function testAPI() {
+            try {
+                log('🔄 Testing HTTP API...');
+                const response = await fetch('http://localhost:3002/api/beds');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    setStatus('apiStatus', `✅ API Connected! Found ${data.length} beds`, 'success');
+                    log(`✅ HTTP API Success: ${data.length} beds received`);
+                    log(`📋 Sample bed: ${data[0].patientName} (${data[0].status})`);
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                setStatus('apiStatus', `❌ API Error: ${error.message}`, 'error');
+                log(`❌ HTTP API Error: ${error.message}`);
+            }
+        }
+
+        function connectWebSocket() {
+            try {
+                log('🔄 Connecting to WebSocket...');
+                ws = new WebSocket('ws://localhost:3002');
+                
+                ws.onopen = function() {
+                    setStatus('wsStatus', '✅ WebSocket Connected!', 'success');
+                    log('✅ WebSocket connected successfully');
+                };
+                
+                ws.onmessage = function(event) {
+                    const data = JSON.parse(event.data);
+                    log(`📊 Received ${data.type}: ${data.beds?.length || 0} beds`);
+                    
+                    if (data.beds && data.beds[0]) {
+                        const bed = data.beds[0];
+                        log(`   └─ Bed ${bed.id}: ${bed.patientName} - HR: ${Math.round(bed.vitals.heartRate)} bpm`);
+                    }
+                };
+                
+                ws.onclose = function() {
+                    setStatus('wsStatus', '🔌 WebSocket Disconnected', 'info');
+                    log('🔌 WebSocket disconnected');
+                };
+                
+                ws.onerror = function(error) {
+                    setStatus('wsStatus', '❌ WebSocket Error', 'error');
+                    log(`❌ WebSocket error: ${error}`);
+                };
+                
+            } catch (error) {
+                setStatus('wsStatus', `❌ Connection Error: ${error.message}`, 'error');
+                log(`❌ WebSocket connection error: ${error.message}`);
+            }
+        }
+
+        function disconnectWebSocket() {
+            if (ws) {
+                ws.close();
+                ws = null;
+                log('🔌 WebSocket disconnected manually');
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        // Auto-test on page load
+        window.onload = function() {
+            log('🚀 ICU Monitor Connection Test Started');
+            log('📋 Click buttons above to test connections');
+        };
+    </script>
+</body>
+</html>
