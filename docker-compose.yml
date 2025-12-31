@@ -1,4 +1,3 @@
-
 services:
   bed-icu:
     build:
@@ -27,6 +26,15 @@ services:
       - "3000:3000"
     environment:
       - NEXT_TELEMETRY_DISABLED=1
+      # FIX: Forces the app to listen on all interfaces
+      - HOSTNAME=0.0.0.0
+      # FIX: Tells NextAuth/Next.js the public URL is localhost, not the container ID
+      - NEXTAUTH_URL=http://localhost:3000
+    env_file:
+      - path: .env.local
+        required: true
+    
+    
     networks:
       - app-network
     restart: unless-stopped
