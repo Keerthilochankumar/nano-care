@@ -92,7 +92,7 @@ const PureMessage = memo(
     if (prevProps.isLatestMessage !== nextProps.isLatestMessage) return false;
     if (prevProps.status !== nextProps.status) return false;
 
-    return equal(prevProps.message, nextProps.message);
+    return equal.default(prevProps.message, nextProps.message);
   },
 );
 

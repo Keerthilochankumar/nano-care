@@ -23,6 +23,7 @@ COPY . .
 RUN npm install -g pnpm
 
 # Build Next.js application
+ENV NODE_ENV=production
 RUN pnpm build
 
 # Production image
